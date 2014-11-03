@@ -35,6 +35,7 @@ except ImportError:
 
 if os.name == 'nt':
     import ctypes
+
     class _CursorInfo(ctypes.Structure):
         """Información sobre el cursor de texto."""
         _fields_ = [("size", ctypes.c_int),
@@ -91,22 +92,16 @@ class Completador(object):
         """Autocompletado con tabulación."""
         self.opciones = sorted(opciones)
         self.o = self.opciones[:]
-        return
 
     def completar(self, texto, estado):
         """Event handler para completer de readline."""
-        respuesta = None
         if estado == 0:
             if texto:
                 self.o = [o for o in self.opciones
                           if o and o.startswith(texto)]
             else:
                 self.o = self.opciones[:]
-        try:
-            respuesta = self.o[estado]
-        except IndexError:
-            respuesta = None
-        return respuesta
+        return None if estado >= len(self.o) else self.o[estado]
 
 
 class Prompt(object):
