@@ -2,9 +2,9 @@
 #-*- coding: utf-8 -*-
 
 # -----------------------------------------------------------------------------
-# Módulo: cli - Version 0.1 - 30/10/2014 (Rev. 31/10/2014)
+# Módulo: cli - Version 0.2 - 30/10/2014 (Rev. 04/11/2014)
 # Carlos Zayas Guggiari <carlos@zayas.org>
-# python --version : Python 2.7.5
+# python --version : Python 2.7.5 & 3.3.2
 # -----------------------------------------------------------------------------
 
 import os
@@ -78,13 +78,24 @@ def clear(l=100):
         os.system('CLS')
     else:
         # Otros sistemas operativos
-        print '\n' * l
+        out('\n' * l)
 
 
 def out(cadena):
     """Envía una cadena a stdout y limpia el buffer (imprime más rápido)."""
     sys.stdout.write(cadena)
     sys.stdout.flush()
+
+
+# noinspection PyUnusedLocal
+def pedir(prompt='> '):
+    """Solicita el ingreso de una cadena de caracteres (Python 2 y 3)."""
+    cadena = ''
+    try:
+        cadena = raw_input(prompt)
+    except NameError:
+        cadena = input(prompt)
+    return cadena
 
 
 class Completador(object):
@@ -117,7 +128,7 @@ class Prompt(object):
         linea = ''
         while linea != self.salir:
             try:
-                linea = raw_input(self.prompt)     # Inductor (Prompt)
+                linea = pedir(self.prompt)         # Inductor (Prompt)
                 yield linea
             except (KeyboardInterrupt, EOFError):  # Control+D o fin de archivo
                 sys.exit(0)                        # Salir sin errores
@@ -129,7 +140,7 @@ class Menu(object):
         self.opciones = opciones
         indice = sorted(opciones)
         for opcion in indice:
-            print opcion + ':', opciones[opcion][0]
+            out('{}: {}\n'.format(opcion, opciones[opcion][0]))
 
     def pedir(self, mensaje='', tecla=False):
         """Pedir una opción por getkey o raw_input."""
@@ -141,7 +152,7 @@ class Menu(object):
                 entrada = getkey().lower()
                 cursoron()
             else:
-                entrada = raw_input(mensaje).lower()
+                entrada = pedir(mensaje).lower()
             if not entrada:
                 salir = True
             else:
@@ -155,16 +166,16 @@ class Demo(object):
     def __init__(self):
         """Demostración del módulo 'cli'."""
         clear()
-        print 'Este es un ejemplo de la clase Prompt con Completador.'
-        print 'Presione dos veces TAB para obtener una lista de opciones.'
+        out('Este es un ejemplo de la clase Prompt con Completador.\n')
+        out('Presione dos veces TAB para obtener una lista de opciones.\n')
         p = Prompt(['start', 'stop', 'list', 'print'], 'stop').ciclo()
         l = ''
         while l != 'stop':
-            l = p.next()
+            l = next(p)
             if l:
-                print 'Recibido: %s' % l
-        print 'Este es un ejemplo de uso de la clase Menu.'
-        print 'Primero, vamos a usar un prompt.'
+                out('Recibido: {}\n'.format(l))
+        out('Este es un ejemplo de uso de la clase Menu.\n')
+        out('Primero, vamos a usar un prompt.\n')
         opciones = {
             'a': ['Opción A', self.opcion_a],
             'b': ['Opción B', self.opcion_b],
@@ -172,11 +183,11 @@ class Demo(object):
         }
         opcion = Menu(opciones).pedir('> ')
         if opcion:
-            print 'Ha sido elegida la opción "%s"' % opcion()
-        print 'Ahora sólo presione una tecla.'
+            out('Ha sido elegida la opción "{}"\n'.format(opcion()))
+        out('Ahora sólo presione una tecla.\n')
         opcion = Menu(opciones).pedir('', True)
         if opcion:
-            print 'Ha sido elegida la opción "%s"' % opcion()
+            out('Ha sido elegida la opción "{}"\n'.format(opcion()))
 
     @staticmethod
     def opcion_a():
