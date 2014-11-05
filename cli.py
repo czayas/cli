@@ -7,6 +7,8 @@
 # python --version : Python 2.7.5 & 3.3.2
 # -----------------------------------------------------------------------------
 
+"""Funciones y clases para implementar una interfaz de línea de comandos."""
+
 import os
 import sys
 import readline
