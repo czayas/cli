@@ -7,9 +7,9 @@ El módulo **cli** (de *Command Line Interface*) es un conjunto de funciones y c
 
 Este módulo es compatible con las versiones 2.7.x y 3.3.x de Python, y aunque fue desarrollado y probado en plataforma GNU/Linux, se ha previsto su uso en plataforma Windows, y probablemente funcione sin problemas en este sistema operativo.
 
-El módulo está disponible para la descarga en su página de GitHub:
+La documentación completa del módulo ```cli``` está disponible en:
 
-[https://github.com/czayas/cli](https://github.com/czayas/cli)
+[http://czayas.gitbooks.io/cli/](http://czayas.gitbooks.io/cli/)
 
 Para usar el módulo, basta con colocar el archivo ```cli.py``` en la misma carpeta que el programa que va a importarlo.
 
