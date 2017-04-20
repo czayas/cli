@@ -1,8 +1,6 @@
 cli - Módulo Python para interfaces de línea de comando
 =======================================================
 
-# Introducción
-
 El módulo **cli** (de *Command Line Interface*) es un conjunto de funciones y clases escritas en Python para la creación de interfaces de usuario basadas en línea de comandos con autocompletado y menús de opciones con captura de teclas.
 
 Este módulo es compatible con las versiones 2.7.x y 3.3.x de Python, y aunque fue desarrollado y probado en plataforma GNU/Linux, se ha previsto su uso en plataforma Windows, y probablemente funcione sin problemas en este sistema operativo.
@@ -56,4 +54,4 @@ opcion()  # Se ejecuta la función elegida
 
 Una manera rápida de experimentar lo que ofrece este módulo es ejecutando el archivo ```cli.py```, lo que iniciará una demostración equivalente al listado anterior.
 
-Se ha intentado hacer de ```cli```un módulo util, práctico, multiversión y multiplataforma. Se recibirá con agrado cualquier comentario o sugerencia. Favor escribir a ```carlos@zayas.org```
+Se ha intentado hacer de ```cli```un módulo util, práctico, multiversión y multiplataforma. Se recibirá con agrado cualquier comentario o sugerencia.
