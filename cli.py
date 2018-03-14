@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #-*- coding: utf-8 -*-
 
 # -----------------------------------------------------------------------------
@@ -11,7 +11,10 @@
 
 import os
 import sys
-import readline
+try:
+    import readline
+except ImportError:
+    pass
 
 
 try:
@@ -122,8 +125,11 @@ class Prompt(object):
         """Inductor o línea de comandos."""
         self.salir = salir
         self.prompt = prompt
-        readline.set_completer(Completador(opciones).completar)
-        readline.parse_and_bind('tab: complete')
+        try:
+            readline.set_completer(Completador(opciones).completar)
+            readline.parse_and_bind('tab: complete')
+        except:
+            pass
 
     def ciclo(self):
         """Lectura del REPL (Read-Eval-Print Loop)."""
