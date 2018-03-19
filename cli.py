@@ -32,10 +32,10 @@ except ImportError:
         mode = termios.tcgetattr(archivo)
         try:
             tty.setraw(archivo, termios.TCSANOW)
-            ch = sys.stdin.read(1)
+            caracter = sys.stdin.read(1)
         finally:
             termios.tcsetattr(archivo, termios.TCSANOW, mode)
-        return ch
+        return caracter
 
 
 if os.name == 'nt':
@@ -43,6 +43,7 @@ if os.name == 'nt':
 
     class _CursorInfo(ctypes.Structure):
         """Información sobre el cursor de texto."""
+
         _fields_ = [("size", ctypes.c_int),
                     ("visible", ctypes.c_byte)]
 
@@ -50,11 +51,11 @@ if os.name == 'nt':
 def cursoroff():
     """Oculta el cursor."""
     if os.name == 'nt':
-        ci = _CursorInfo()
+        cur = _CursorInfo()
         handle = ctypes.windll.kernel32.GetStdHandle(-11)
-        ctypes.windll.kernel32.GetConsoleCursorInfo(handle, ctypes.byref(ci))
-        ci.visible = False
-        ctypes.windll.kernel32.SetConsoleCursorInfo(handle, ctypes.byref(ci))
+        ctypes.windll.kernel32.GetConsoleCursorInfo(handle, ctypes.byref(cur))
+        cur.visible = False
+        ctypes.windll.kernel32.SetConsoleCursorInfo(handle, ctypes.byref(cur))
     elif os.name == 'posix':
         sys.stdout.write("\033[?25l")
         sys.stdout.flush()
@@ -63,17 +64,17 @@ def cursoroff():
 def cursoron():
     """Muestra el cursor."""
     if os.name == 'nt':
-        ci = _CursorInfo()
+        cur = _CursorInfo()
         handle = ctypes.windll.kernel32.GetStdHandle(-11)
-        ctypes.windll.kernel32.GetConsoleCursorInfo(handle, ctypes.byref(ci))
-        ci.visible = True
-        ctypes.windll.kernel32.SetConsoleCursorInfo(handle, ctypes.byref(ci))
+        ctypes.windll.kernel32.GetConsoleCursorInfo(handle, ctypes.byref(cur))
+        cur.visible = True
+        ctypes.windll.kernel32.SetConsoleCursorInfo(handle, ctypes.byref(cur))
     elif os.name == 'posix':
         sys.stdout.write("\033[?25h")
         sys.stdout.flush()
 
 
-def clear(l=100):
+def clear(linea=100):
     """Borra la pantalla de texto."""
     if os.name == 'posix':
         # Unix, Linux, MacOS, BSD, etc.
@@ -83,7 +84,7 @@ def clear(l=100):
         os.system('CLS')
     else:
         # Otros sistemas operativos
-        out('\n' * l)
+        out('\n' * linea)
 
 
 def out(cadena):
@@ -104,31 +105,35 @@ def pedir(prompt='> '):
 
 
 class Completador(object):
+    """Autocompletado con tabulación."""
+
     def __init__(self, opciones):
-        """Autocompletado con tabulación."""
+        """Constructor."""
         self.opciones = sorted(opciones)
-        self.o = self.opciones[:]
+        self.opc = self.opciones[:]
 
     def completar(self, texto, estado):
         """Event handler para completer de readline."""
         if estado == 0:
             if texto:
-                self.o = [o for o in self.opciones
-                          if o and o.startswith(texto)]
+                self.opc = [opc for opc in self.opciones
+                            if opc and opc.startswith(texto)]
             else:
-                self.o = self.opciones[:]
-        return None if estado >= len(self.o) else self.o[estado]
+                self.opc = self.opciones[:]
+        return None if estado >= len(self.opc) else self.opc[estado]
 
 
 class Prompt(object):
+    """Inductor o línea de comandos."""
+
     def __init__(self, opciones, salir='quit', prompt='> '):
-        """Inductor o línea de comandos."""
+        """Constructor."""
         self.salir = salir
         self.prompt = prompt
         try:
             readline.set_completer(Completador(opciones).completar)
             readline.parse_and_bind('tab: complete')
-        except:
+        except NameError:
             pass
 
     def ciclo(self):
@@ -143,8 +148,10 @@ class Prompt(object):
 
 
 class Menu(object):
+    """Menú de opciones."""
+
     def __init__(self, opciones):
-        """Menú de opciones."""
+        """Constructor."""
         self.opciones = opciones
         indice = sorted(opciones)
         for opcion in indice:
@@ -171,17 +178,19 @@ class Menu(object):
 
 
 class Demo(object):
+    """Demostración del módulo 'cli'."""
+
     def __init__(self):
-        """Demostración del módulo 'cli'."""
+        """Constructor."""
         clear()
         out('Este es un ejemplo de la clase Prompt con Completador.\n')
         out('Presione dos veces TAB para obtener una lista de opciones.\n')
-        p = Prompt(['start', 'stop', 'list', 'print'], 'stop').ciclo()
-        l = ''
-        while l != 'stop':
-            l = next(p)
-            if l:
-                out('Recibido: {}\n'.format(l))
+        prompt = Prompt(['start', 'stop', 'list', 'print'], 'stop').ciclo()
+        linea = ''
+        while linea != 'stop':
+            linea = next(prompt)
+            if linea:
+                out('Recibido: {}\n'.format(linea))
         out('Este es un ejemplo de uso de la clase Menu.\n')
         out('Primero, vamos a usar un prompt.\n')
         opciones = {
@@ -199,14 +208,17 @@ class Demo(object):
 
     @staticmethod
     def opcion_a():
+        """Método estático de prueba (A)."""
         return 'a'
 
     @staticmethod
     def opcion_b():
+        """Método estático de prueba (B)."""
         return 'b'
 
     @staticmethod
     def opcion_c():
+        """Método estático de prueba (C)."""
         return 'c'
 
 
