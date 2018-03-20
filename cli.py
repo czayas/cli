@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-#-*- coding: utf-8 -*-
+# Para Python 2, agregar: #-*- coding: utf-8 -*-
 
 # -----------------------------------------------------------------------------
 # Módulo: cli - Version 0.2 - 30/10/2014 (Rev. 19/03/2018)
 # Carlos Zayas Guggiari - czayas(at)gmail.com
-# python --version : Python 2.7.5 & 3.3.2
+# python --version : Python 2.7.14 & 3.6.4
 # -----------------------------------------------------------------------------
 
 """Funciones y clases para implementar una interfaz de línea de comandos."""
